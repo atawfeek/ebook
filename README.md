@@ -1,4 +1,4 @@
-React Moltin Ecommerce is an app demonstrating the usage of Moltin Javascript API and React
+React + Redux + Moltin Ecommerce is an app demonstrating the usage of Moltin Javascript API, React + Redux
 
 ## How to run the app
 1. Make sure you have [Create React App](https://github.com/facebookincubator/create-react-app) installed on your system
