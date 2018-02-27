@@ -1,6 +1,6 @@
 import React from 'react';
 import Categories from './Categories';
-import SidebarCart from './SidebarCart';
+import {SidebarCartContainer} from '../containers/cart.container';
 import events from '../vendor/pub-sub';
 
 export default class Sidebar extends React.Component {
@@ -30,7 +30,7 @@ export default class Sidebar extends React.Component {
 				<div className={`ui wide sidebar visible ${this.state.visible ? 'display-on-mobile' : ''}`}>
 					<div className="sidebar-inner">
 						<button className="ui button close-sidebar" onClick={this.closeSidebar}><i className="angle double left icon"></i> Close</button>
-						<SidebarCart/>
+						<SidebarCartContainer/>
 						<Categories/>
 					</div>
 				</div>

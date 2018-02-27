@@ -6,16 +6,25 @@
     "react-scripts": "0.8.4"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "gulp": "^3.9.1",
     "lodash": "^4.17.3",
     "moltin": "^1.0.4",
+    "node-sass": "^4.7.2",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.2",
     "react-dom": "^15.4.1",
     "react-image-gallery": "^0.7.12",
+    "react-redux": "^5.0.7",
     "react-router": "^3.0.0",
+    "redux": "^3.7.2",
+    "redux-promise": "^0.5.3",
+    "redux-promises": "^1.0.0",
+    "sass": "^1.0.0-beta.5.2",
+    "sass-watch": "^0.1.0",
     "semantic-ui": "^2.2.7",
-    "semantic-ui-react": "^0.64.8"
+    "semantic-ui-react": "^0.64.8",
+    "watch": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

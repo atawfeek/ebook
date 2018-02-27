@@ -2,9 +2,9 @@ import React from 'react'
 import moltin from '../vendor/moltin';
 import ImageGallery from 'react-image-gallery';
 import _ from 'lodash'
-import LoadingIcon from '../../public/ripple.svg';
+import LoadingIcon from '../public/ripple.svg';
 import { Accordion, Icon } from 'semantic-ui-react';
-import AddToCartButton from '../components/AddToCartButton'
+import { CartContainer } from '../containers/cart.container';
 
 
 export default class Product extends React.Component {
@@ -90,7 +90,7 @@ export default class Product extends React.Component {
 						<div className="six wide column">
 							<div className="product-details">
 								<h1>{this.state.product.title} <span className="price">{this.state.product.price.value}</span></h1>
-								<AddToCartButton additionalClass="fluid ui button" productId={this.state.product.id}/>
+								<CartContainer additionalClass="fluid ui button" productId={this.state.product.id}/>
 
 								<Accordion styled defaultActiveIndex={0}>
 									<Accordion.Title>

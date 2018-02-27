@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import moltin from '../vendor/moltin';
 import PaymentForm from '../components/PaymentForm'
 import CartDetails from '../components/CartDetails'
+import { CartDetailsContainer } from "../containers/cart.container";
 
 export default class Checkout extends React.Component {
 	render() {
@@ -13,7 +14,7 @@ export default class Checkout extends React.Component {
 						<PaymentForm/>
 					</div>
 					<div className="nine wide column pt-n pb-n">
-						<CartDetails/>
+						<CartDetailsContainer/>
 					</div>
 				</div>
 			</div>

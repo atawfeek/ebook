@@ -2,81 +2,44 @@ import React, { Component } from 'react';
 import events from '../vendor/pub-sub';
 import _ from 'lodash/object';
 import moltin from '../vendor/moltin';
-import LoadingIcon from '../../public/ripple.svg';
+import LoadingIcon from '../public/ripple.svg';
 import {Link} from 'react-router';
 
 export default class CartDetails extends React.Component {
+	constructor(){
+		super();
+	}
+	
 	state = {
-		currentCart : {
-			total_items: 0,
-			contents: {},
-			totals : {
-				post_discount : {
-					formatted : {
-						with_tax: null
-					}
- 				}
-			}
-		},
-		loaded: false,
+		loaded: true,
 		removing: false
 	};
 
-	componentDidMount() {
-		let _this = this;
-		moltin.Authenticate(function () {
-			moltin.Cart.Contents(function(items) {
-				events.publish('CART_UPDATED', {
-					cart: items // any argument
-				});
+	removeFromCart(clicked) {
+		
+		const {cartItems , removeCart} = this.props;
 
-				_this.setState({
-					currentCart: items,
-					loaded: true
-				})
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
+		removeCart(clicked);
+
 	}
 
-	removeFromCart(clicked) {
-		let _this = this;
-		this.setState({
-			removing: true
-		});
+	calcTotalPrice(arr){
+		if(arr.length === 0){
+			return 0;
+		}
+		if(arr.length === 1){
+			return parseInt(arr[0].price.data.formatted.with_tax.replace('\u20ac',''));
+		}
 
-		moltin.Authenticate(function () {
-			moltin.Cart.Remove(clicked, function() {
-				moltin.Cart.Contents(function(items) {
-					events.publish('CART_UPDATED', {
-						cart: items // any argument
-					});
-
-					_this.setState({
-						currentCart: items,
-						loaded: true,
-						removing: false
-					})
-				}, function(error) {
-					// Something went wrong...
-				});
-
-				console.log('item removed', clicked)
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
+		return parseInt(arr[0].price.data.formatted.with_tax.replace('\u20ac','')) + parseInt(this.calcTotalPrice(arr.slice(1)));
 	}
 
 	render() {
 		let preparedCartContent;
-		let cartContent = _.values(this.state.currentCart.contents);
-		console.log(this.state.currentCart);
 
 		// If the cart is not empty, display the cart items
-		if (this.state.currentCart.total_items >= 1) {
-			preparedCartContent = cartContent.map((result, id) => {
+		if (this.props.cartItems.length >= 1) {
+			preparedCartContent = this.props.cartItems.map((result, id) => {
 				return(
 					<div className="item" key={id}>
 						<div className="ui tiny image">
@@ -92,7 +55,7 @@ export default class CartDetails extends React.Component {
 						<div className="content">
 							<Link to={`/product/${result.id}`}>
 								<span className="header">{result.name} <br/>
-								<span className="price">{result.pricing.formatted.with_tax}</span>
+								<span className="price">{result.price.data.formatted.with_tax}</span>
 							</span>
 							</Link>
 						</div>
@@ -124,7 +87,7 @@ export default class CartDetails extends React.Component {
 
 					<div className="total">
 						<span className="text">TOTAL: </span>
-						<span className="price">{this.state.currentCart.totals.post_discount.formatted.with_tax}</span>
+						<span className="price">{`\u20ac${this.calcTotalPrice(this.props.cartItems)}`}</span>
 					</div>
 				</div>
 			</div>

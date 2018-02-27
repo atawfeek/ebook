@@ -9,38 +9,25 @@ export default class AddToCart extends React.Component {
 	};
 
 	addToCart = (clicked) => {
-		let _this = this;
-
-		// Fire ADD_TO_CART immediately after user initiate the action
-		events.publish('ADD_TO_CART', {
-			adding: true
-		});
 
 		this.setState({
-			clickedId: clicked,
 			adding: true
 		});
 
-		moltin.Authenticate(function() {
-			moltin.Cart.Insert(clicked, '1', null, function(cart) {
+		const { products, cartItems, addCart } = this.props;
 
-				// Inform other listeners that ADD_TO_CART event is complete
-				events.publish('ADD_TO_CART', {
-					adding: false
-				});
+		//add cart into store
+		var selectedItem = products.filter(prod => prod.id === clicked);
+		//ToDO: Check if the item already exists to be added!
+		var restItems = cartItems.filter(prod => prod.id !== clicked);
+		if(restItems.length === cartItems.length){
+			addCart(selectedItem);
+		}
 
-				// We use this info in the component itself
-				_this.setState({
-					adding: false
-				})
-
-			}, function(error) {
-				_this.setState({
-					adding: false
-				})
-				console.log(error);
-			});
-		});
+		// We use this info in the component itself
+		this.setState({
+			adding: false
+		})
 	};
 
 

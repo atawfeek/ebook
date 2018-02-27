@@ -3,80 +3,33 @@ import events from '../vendor/pub-sub';
 import moltin from '../vendor/moltin';
 import _ from 'lodash/object';
 import {Link} from 'react-router';
-import LoadingIcon from '../../public/ripple.svg';
+import LoadingIcon from '../public/ripple.svg';
 
 export default class SidebarCart extends React.Component {
-	state = {
-		currentCart : {
-			total_items: 0,
-			totals : {
-				post_discount : {
-					formatted : {
-						with_tax: null
-					}
-				}
-			}
-		},
-		addingToCart: false
-	};
 
-	componentDidMount() {
-		let _this = this;
+	constructor(){
+		super();
+	}
 
-		// Initial content load of the cart content
-		moltin.Authenticate(function () {
-			moltin.Cart.Contents(function(items) {
-				events.publish('CART_UPDATED', {
-					cart: items // any argument
-				});
+	calcTotalPrice(arr){
+		if(arr.length === 0){
+			return 0;
+		}
+		if(arr.length === 1){
+			return parseInt(arr[0].price.data.formatted.with_tax.replace('\u20ac',''));
+		}
 
-				_this.setState({
-					currentCart: items
-				})
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
-
-		// Listen to theCART_UPDATED event. Once it happens, take the object from the
-		// published event and pass it to the currentCart state
-		events.subscribe('CART_UPDATED', function(obj) {
-			_this.setState({
-				currentCart: obj.cart
-			});
-		});
-
-		// Listen to the ADD_TO_CART event
-		events.subscribe('ADD_TO_CART', function(obj) {
-			_this.setState({
-				addingToCart: obj.adding
-			});
-
-			// Once it fires, get the latest cart content data
-			moltin.Authenticate(function () {
-				moltin.Cart.Contents(function(items) {
-
-					// Pass the new cart content to CART_UPDATED event
-					events.publish('CART_UPDATED', {
-						cart: items
-					});
-
-					_this.setState({
-						currentCart: items
-					})
-				}, function(error) {
-					// Something went wrong...
-				});
-			});
-		});
+		return parseInt(arr[0].price.data.formatted.with_tax.replace('\u20ac','')) + parseInt(this.calcTotalPrice(arr.slice(1)));
 	}
 
 	render() {
 		let preparedCartContent;
-		let cartContent = _.values(this.state.currentCart.contents);
+		let cartContent = _.values(this.props.cartItems);
+
+		console.log(this.props.cartItems);
 
 		// If the cart is not empty, display the cart items
-		if (this.state.currentCart.total_items >= 1) {
+		if (this.props.cartItems.length >= 1) {
 			preparedCartContent = cartContent.map((result, id) => {
 				return(
 					<div className="item" key={id}>
@@ -91,7 +44,7 @@ export default class SidebarCart extends React.Component {
 							}
 						</div>
 						<div className="content">
-							<span className="header">{result.name} <br/><span className="price">{result.pricing.formatted.with_tax}</span></span>
+							<span className="header">{result.name} <br/><span className="price">{result.price.data.formatted.with_tax}</span></span>
 						</div>
 					</div>
 				)
@@ -109,15 +62,13 @@ export default class SidebarCart extends React.Component {
 
 		return (
 			<div className="sidebar-cart sidebar-element">
-				<h4>In Cart: <span className="price">{this.state.currentCart.totals.post_discount.formatted.with_tax}</span></h4>
+				<h4>In Cart: <span className="price">{`\u20ac${this.calcTotalPrice(this.props.cartItems)}`}</span></h4>
 				{/*// If the cart is not empty, add 'active' class to it*/}
-				<Link to="/checkout" className={`ui checkout button tiny ${this.state.currentCart.total_items >= 1 ? 'active': ''}`}>
+				<Link to="/checkout" className={`ui checkout button tiny ${this.props.cartItems.length >= 1 ? 'active': ''}`}>
 					<i className="paypal icon"></i>Checkout</Link>
 				<div className="ui items">
 					{preparedCartContent}
 				</div>
-
-				<img className={`loading-icon ${!this.state.addingToCart ? 'non-visible' : ''}`} src={LoadingIcon} alt="Loading"/>
 			</div>
 		);
 	}

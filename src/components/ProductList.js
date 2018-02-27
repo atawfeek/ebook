@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import AddToCartButton from '../components/AddToCartButton'
+import { CartContainer } from '../containers/cart.container';
 
 export default class Spotlight extends React.Component {
 	state = {
@@ -27,7 +27,7 @@ export default class Spotlight extends React.Component {
 
 							<div className="extra content">
 								<div className="buttons-container">
-									<AddToCartButton productId={result.id} additionalClass="inverted"/>
+									<CartContainer productId={result.id} additionalClass="inverted"/>
 									<Link className="ui inverted button" to={`/product/${result.id}`}>Details</Link>
 								</div>
 							</div>

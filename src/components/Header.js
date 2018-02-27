@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
-import Cart from './Cart'
-import Logo from '../../public/logo.png'
+import {CartCountContainer} from '../containers/cart.container'
+import Logo from '../public/logo.png'
 import events from '../vendor/pub-sub';
 
 export default class Header extends React.Component {
@@ -21,9 +21,8 @@ export default class Header extends React.Component {
 							<img src={Logo} alt=""/>
 						</Link>
 						<Link to="/" className="general item">Home</Link>
-						<a href="https://github.com/TarikFojnica/react-moltin-ecommerce" className="item"><i className="github icon"></i> Github</a>
 						<button className="item navigation-button" onClick={this.showSidebar}><i className="list layout icon"></i> Menu</button>
-						<Cart/>
+						<CartCountContainer/>
 					</div>
 				</div>
 			</header>
